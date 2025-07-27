@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#2196f3" />
   <link rel="icon" href="icon.png" />
-
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap');
 
@@ -15,52 +14,86 @@
       padding: 16px;
       max-width: 700px;
       margin: auto;
+      position: relative;
     }
+
     input, button {
       font-size: 1rem;
       margin: 4px;
       padding: 6px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 16px;
     }
+
     th, td {
       border: 1px solid #ddd;
       padding: 6px;
       text-align: center;
     }
+
     th {
       background: #f0f0f0;
     }
+
     button {
       border-radius: 4px;
       cursor: pointer;
     }
-    .edit-btn {
-      background: #f39c12;
-      color: white;
-      border: none;
-      padding: 4px 8px;
+
+    .edit-btn { background: #f39c12; color: white; border: none; padding: 4px 8px; }
+    .delete-btn { background: #e74c3c; color: white; border: none; padding: 4px 8px; }
+    .save-btn { background: #2ecc71; color: white; border: none; padding: 4px 8px; }
+    .cancel-btn { background: #95a5a6; color: white; border: none; padding: 4px 8px; }
+
+    /* 🐥 羽ばたくファルぴぃ */
+    #bird {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      width: 40px;
+      animation: float 2s ease-in-out infinite;
+      z-index: 100;
     }
-    .delete-btn {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 4px 8px;
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
-    .save-btn {
-      background: #2ecc71;
-      color: white;
-      border: none;
-      padding: 4px 8px;
+
+    /* 💬 吹き出し */
+    #message {
+      position: fixed;
+      bottom: 60px;
+      right: 60px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      font-size: 0.9rem;
+      display: none;
+      z-index: 99;
     }
-    .cancel-btn {
-      background: #95a5a6;
-      color: white;
-      border: none;
-      padding: 4px 8px;
+
+    /* 🪶 羽エフェクト */
+    .feather {
+      position: fixed;
+      bottom: 60px;
+      right: 50px;
+      font-size: 20px;
+      opacity: 1;
+      animation: floatUp 2s ease-out forwards;
+      pointer-events: none;
+      z-index: 98;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-80px); opacity: 0; }
     }
   </style>
 </head>
@@ -81,6 +114,12 @@
     <tbody id="tbody"></tbody>
   </table>
 
+  <!-- 🐥 右下のファルぴぃ -->
+  <img id="bird" src="icon.png" alt="ファル" />
+
+  <!-- 💬 チュン♪メッセージ -->
+  <div id="message">記録したよ！チュン♪</div>
+
   <script>
     const d = document.getElementById('d');
     const i = document.getElementById('i');
@@ -89,6 +128,7 @@
     const btn = document.getElementById('btn');
     const tbody = document.getElementById('tbody');
     const itemsList = document.getElementById('items');
+    const msg = document.getElementById('message');
 
     d.value = new Date().toISOString().slice(0,10);
     let entries = JSON.parse(localStorage.getItem('entries') || '[]');
@@ -184,7 +224,22 @@
       }
       i.value = ''; inc.value = ''; exp.value = '';
       saveAndRender();
+      showMessage();
+      showFeather();
     };
+
+    function showMessage() {
+      msg.style.display = 'block';
+      setTimeout(() => { msg.style.display = 'none'; }, 2000);
+    }
+
+    function showFeather() {
+      const feather = document.createElement('div');
+      feather.className = 'feather';
+      feather.innerText = '🪶';
+      document.body.appendChild(feather);
+      setTimeout(() => { feather.remove(); }, 2000);
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       saveAndRender();
