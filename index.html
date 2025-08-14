@@ -7,12 +7,13 @@
   <meta name="theme-color" content="#2196f3" />
   <link rel="icon" href="icon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      padding: 16px;
-      font-family: 'Zen Maru Gothic', sans-serif;
-      max-width: 700px;
-      margin: auto;
+    body { 
+      padding: 16px; 
+      font-family: 'Zen Maru Gothic', sans-serif; 
+      max-width: 700px; 
+      margin: auto; 
     }
     input, button { font-size: 1rem; margin: 4px; padding: 6px; }
     table { width: 100%; border-collapse: collapse; margin-top: 16px; }
@@ -65,10 +66,11 @@
 
     function render() {
       tbody.innerHTML = '';
-      const now = new Date();
-      const cutoff = new Date(now.getFullYear(), now.getMonth() - 2, 1); // 直近3ヶ月の1日から
+      const today = new Date();
+      const threeMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+
       entries
-        .filter(e => new Date(e.date) >= cutoff)
+        .filter(e => new Date(e.date) >= threeMonthsAgo)
         .forEach((e, index) => {
           const tr = document.createElement('tr');
           if (e.editing) {
