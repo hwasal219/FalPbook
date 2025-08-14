@@ -7,13 +7,12 @@
   <meta name="theme-color" content="#2196f3" />
   <link rel="icon" href="icon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
-
   <style>
-    body { 
-      padding: 16px; 
-      font-family: 'Zen Maru Gothic', sans-serif; 
-      max-width: 700px; 
-      margin: auto; 
+    body {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      padding: 16px;
+      max-width: 700px;
+      margin: auto;
     }
     input, button { font-size: 1rem; margin: 4px; padding: 6px; }
     table { width: 100%; border-collapse: collapse; margin-top: 16px; }
@@ -64,40 +63,46 @@
       render();
     }
 
+    function getDisplayEntries() {
+      const now = new Date();
+      const startDate = new Date(now.getFullYear(), now.getMonth(), 1); // 今月の1日
+      const endDate = new Date(now.getFullYear(), now.getMonth() + 3, 0); // 今月+2ヶ月後の末日
+
+      return entries.filter(e => {
+        const date = new Date(e.date);
+        return date >= startDate && date <= endDate;
+      });
+    }
+
     function render() {
       tbody.innerHTML = '';
-      const today = new Date();
-      const threeMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, 1);
-
-      entries
-        .filter(e => new Date(e.date) >= threeMonthsAgo)
-        .forEach((e, index) => {
-          const tr = document.createElement('tr');
-          if (e.editing) {
-            tr.innerHTML = `
-              <td><input type="date" value="${e.date}" id="edit-date-${index}"></td>
-              <td><input type="text" value="${e.item}" id="edit-item-${index}"></td>
-              <td><input type="number" value="${e.income}" id="edit-inc-${index}"></td>
-              <td><input type="number" value="${e.expense}" id="edit-exp-${index}"></td>
-              <td>--</td>
-              <td>
-                <button class="save-btn" onclick="saveEdit(${index})">保存</button>
-                <button class="cancel-btn" onclick="cancelEdit(${index})">取消</button>
-              </td>`;
-          } else {
-            tr.innerHTML = `
-              <td>${e.date}</td>
-              <td>${e.item}</td>
-              <td>${e.income ? e.income.toLocaleString() : ''}</td>
-              <td>${e.expense ? e.expense.toLocaleString() : ''}</td>
-              <td><b>${e.balance.toLocaleString()}</b></td>
-              <td>
-                <button class="edit-btn" onclick="editEntry(${index})">修正</button>
-                <button class="delete-btn" onclick="deleteEntry(${index})">削除</button>
-              </td>`;
-          }
-          tbody.appendChild(tr);
-        });
+      getDisplayEntries().forEach((e, index) => {
+        const tr = document.createElement('tr');
+        if (e.editing) {
+          tr.innerHTML = `
+            <td><input type="date" value="${e.date}" id="edit-date-${index}"></td>
+            <td><input type="text" value="${e.item}" id="edit-item-${index}"></td>
+            <td><input type="number" value="${e.income}" id="edit-inc-${index}"></td>
+            <td><input type="number" value="${e.expense}" id="edit-exp-${index}"></td>
+            <td>--</td>
+            <td>
+              <button class="save-btn" onclick="saveEdit(${index})">保存</button>
+              <button class="cancel-btn" onclick="cancelEdit(${index})">取消</button>
+            </td>`;
+        } else {
+          tr.innerHTML = `
+            <td>${e.date}</td>
+            <td>${e.item}</td>
+            <td>${e.income ? e.income.toLocaleString() : ''}</td>
+            <td>${e.expense ? e.expense.toLocaleString() : ''}</td>
+            <td><b>${e.balance.toLocaleString()}</b></td>
+            <td>
+              <button class="edit-btn" onclick="editEntry(${index})">修正</button>
+              <button class="delete-btn" onclick="deleteEntry(${index})">削除</button>
+            </td>`;
+        }
+        tbody.appendChild(tr);
+      });
     }
 
     function deleteEntry(index) {
@@ -135,7 +140,9 @@
       saveAndRender();
     };
 
-    window.addEventListener('DOMContentLoaded', saveAndRender);
+    window.addEventListener('DOMContentLoaded', () => {
+      saveAndRender();
+    });
   </script>
 </body>
 </html>
